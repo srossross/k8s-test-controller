@@ -97,8 +97,6 @@ func main() {
 		log.Fatalf("error creating api client: %s", err.Error())
 	}
 
-	ctrl = controller.NewTestController(&sharedFactory, cl, coreV1Client)
-
 	log.Printf("Created Kubernetes client.")
 
 	// we use a shared informer from the informer factory, to save calls to the
@@ -106,6 +104,7 @@ func main() {
 	// control loops. We set a resync period of 30 seconds, in case any
 	// create/replace/update/delete operations are missed when watching
 	sharedFactory = factory.NewSharedInformerFactory(cl, time.Second*30)
+	ctrl = controller.NewTestController(&sharedFactory, cl, coreV1Client)
 
 	testRunInformer := run.NewTestRunInformer(sharedFactory, queue)
 

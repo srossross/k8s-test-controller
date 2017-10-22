@@ -1,5 +1,5 @@
 apiVersion: srossross.github.io/v1alpha1
-kind: Test
+kind: TestTemplate
 metadata:
   name: test-success
   labels:
@@ -18,7 +18,7 @@ spec:
       backoffLimit: 4
 ---
 apiVersion: srossross.github.io/v1alpha1
-kind: Test
+kind: TestTemplate
 metadata:
   name: test-fail
   labels:
@@ -37,7 +37,7 @@ spec:
       backoffLimit: 4
 ---
 apiVersion: srossross.github.io/v1alpha1
-kind: Test
+kind: TestTemplate
 metadata:
   name: test-sleep
   labels:

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strings"
 
 	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
@@ -18,6 +19,7 @@ func splitOnce(key, sep string) (string, string) {
 // GetTestRunFromKey get a test run from a key put on the queue
 func (ctrl *TestController) GetTestRunFromKey(key string) (*v1alpha1.TestRun, error) {
 	namespace, name := splitOnce(key, "/")
+	fmt.Printf("'%s', '%s'", namespace, name)
 	return ctrl.TestRunLister().TestRuns(namespace).Get(name)
 }
 

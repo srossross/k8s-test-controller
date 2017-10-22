@@ -6,7 +6,7 @@ import (
 	listerv1 "k8s.io/client-go/listers/core/v1"
 	cache "k8s.io/client-go/tools/cache"
 
-	"github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
+	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	client "github.com/srossross/k8s-test-controller/pkg/client"
 	srossrossv1alpha1 "github.com/srossross/k8s-test-controller/pkg/client/typed/srossross/v1alpha1"
 	factory "github.com/srossross/k8s-test-controller/pkg/informers/externalversions"
@@ -31,8 +31,8 @@ type Interface interface {
 // TestController creates a single interface to run the reconsile loop
 type TestController struct {
 	sharedFactory *factory.SharedInformerFactory
-	testClient    *client.Clientset
-	coreV1Client  *typedv1.CoreV1Client
+	testClient    client.Interface
+	coreV1Client  typedv1.CoreV1Interface
 }
 
 // CoreV1 get CoreV1 client
@@ -45,7 +45,7 @@ func (ctrl *TestController) CoreV1() typedv1.CoreV1Interface {
 
 // SrossrossV1alpha1 get SrossrossV1alpha1 client
 func (ctrl *TestController) SrossrossV1alpha1() srossrossv1alpha1.SrossrossV1alpha1Interface {
-	return (*ctrl.testClient).SrossrossV1alpha1()
+	return ctrl.testClient.SrossrossV1alpha1()
 }
 
 // TestTemplateLister get a testlister
@@ -69,7 +69,7 @@ func (ctrl *TestController) PodLister() listerv1.PodLister {
 }
 
 //NewTestController creates a new TestController
-func NewTestController(sharedFactory *factory.SharedInformerFactory, testClient *client.Clientset, coreV1Client *typedv1.CoreV1Client) *TestController {
+func NewTestController(sharedFactory *factory.SharedInformerFactory, testClient client.Interface, coreV1Client typedv1.CoreV1Interface) Interface {
 	return &TestController{
 		sharedFactory: sharedFactory,
 		testClient:    testClient,

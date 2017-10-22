@@ -64,6 +64,7 @@ func CreateTestRunEvent(
 		},
 		FirstTimestamp: now,
 		LastTimestamp:  now,
+		Count:          1,
 		Type:           "Normal",
 	}
 

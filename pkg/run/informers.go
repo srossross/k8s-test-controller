@@ -13,11 +13,14 @@ import (
 	workqueue "k8s.io/client-go/util/workqueue"
 )
 
+// ReconsileType is a string
 type ReconsileType string
 
 var (
+	// ReconsilePodStatus tells the Reconcile loop that a pod status has changed
 	ReconsilePodStatus = "Pod"
-	ReconsileTestRun   = "TestRun"
+	// ReconsileTestRun tells the Reconcile loop that a test run has changed
+	ReconsileTestRun = "TestRun"
 )
 
 func isStatusChange(old, cur interface{}) bool {

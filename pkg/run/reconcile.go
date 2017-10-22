@@ -15,6 +15,12 @@ import (
 
 // TestRunner will Reconcile a single test run
 func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
+
+	OnExit := func() {
+		fmt.Println("   ----- Exit TestRunner")
+	}
+	defer OnExit()
+
 	if testRun.Status.Status == v1alpha1.TestRunComplete {
 		log.Printf("  | '%v/%v' is already Complete - Skipping", testRun.Namespace, testRun.Name)
 		return nil
@@ -107,7 +113,7 @@ func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 	}
 
 	if completedCount == len(tests) {
-
+		fmt.Printf(" TEST TEST TEST TEST TEST TEST COMPLETE")
 		Message := fmt.Sprintf("Ran %v tests, %v failures", completedCount, failCount)
 		var Reason string
 		testRun.Status.Status = v1alpha1.TestRunComplete

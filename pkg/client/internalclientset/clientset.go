@@ -19,22 +19,22 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	Pager() testerinternalversion.PagerInterface
+	Tester() testerinternalversion.TesterInterface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	*testerinternalversion.PagerClient
+	*testerinternalversion.TesterClient
 }
 
-// Pager retrieves the PagerClient
-func (c *Clientset) Pager() testerinternalversion.PagerInterface {
+// Tester retrieves the TesterClient
+func (c *Clientset) Tester() testerinternalversion.TesterInterface {
 	if c == nil {
 		return nil
 	}
-	return c.PagerClient
+	return c.TesterClient
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -53,7 +53,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	}
 	var cs Clientset
 	var err error
-	cs.PagerClient, err = testerinternalversion.NewForConfig(&configShallowCopy)
+	cs.TesterClient, err = testerinternalversion.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 // panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *Clientset {
 	var cs Clientset
-	cs.PagerClient = testerinternalversion.NewForConfigOrDie(c)
+	cs.TesterClient = testerinternalversion.NewForConfigOrDie(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClientForConfigOrDie(c)
 	return &cs
@@ -79,7 +79,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.PagerClient = testerinternalversion.New(c)
+	cs.TesterClient = testerinternalversion.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

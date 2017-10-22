@@ -225,7 +225,7 @@
 
 [[projects]]
   name = "k8s.io/client-go"
-  packages = ["discovery","discovery/fake","kubernetes/scheme","kubernetes/typed/core/v1","listers/core/v1","pkg/version","rest","rest/watch","testing","tools/auth","tools/cache","tools/clientcmd","tools/clientcmd/api","tools/clientcmd/api/latest","tools/clientcmd/api/v1","tools/metrics","tools/pager","tools/reference","transport","util/cert","util/flowcontrol","util/homedir","util/integer","util/workqueue"]
+  packages = ["discovery","discovery/fake","kubernetes/scheme","kubernetes/typed/core/v1","listers/core/v1","pkg/version","rest","rest/watch","testing","tools/auth","tools/cache","tools/clientcmd","tools/clientcmd/api","tools/clientcmd/api/latest","tools/clientcmd/api/v1","tools/metrics","tools/tester","tools/reference","transport","util/cert","util/flowcontrol","util/homedir","util/integer","util/workqueue"]
   revision = "2ae454230481a7cb5544325e12ad7658ecccd19b"
   version = "kubernetes-1.8.1"
 

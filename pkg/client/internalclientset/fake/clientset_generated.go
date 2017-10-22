@@ -53,7 +53,7 @@ func (c *Clientset) Discovery() discovery.DiscoveryInterface {
 
 var _ clientset.Interface = &Clientset{}
 
-// Pager retrieves the PagerClient
-func (c *Clientset) Pager() testerinternalversion.PagerInterface {
-	return &faketesterinternalversion.FakePager{Fake: &c.Fake}
+// Tester retrieves the TesterClient
+func (c *Clientset) Tester() testerinternalversion.TesterInterface {
+	return &faketesterinternalversion.FakeTester{Fake: &c.Fake}
 }

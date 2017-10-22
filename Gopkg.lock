@@ -225,7 +225,7 @@
 
 [[projects]]
   name = "k8s.io/client-go"
-  packages = ["discovery","discovery/fake","kubernetes/scheme","kubernetes/typed/core/v1","listers/core/v1","pkg/version","rest","rest/watch","testing","tools/auth","tools/cache","tools/clientcmd","tools/clientcmd/api","tools/clientcmd/api/latest","tools/clientcmd/api/v1","tools/metrics","tools/tester","tools/reference","transport","util/cert","util/flowcontrol","util/homedir","util/integer","util/workqueue"]
+  packages = ["discovery","discovery/fake","kubernetes/scheme","kubernetes/typed/core/v1","kubernetes/typed/core/v1/fake","listers/core/v1","pkg/version","rest","rest/watch","testing","tools/auth","tools/cache","tools/clientcmd","tools/clientcmd/api","tools/clientcmd/api/latest","tools/clientcmd/api/v1","tools/metrics","tools/pager","tools/reference","transport","util/cert","util/flowcontrol","util/homedir","util/integer","util/workqueue"]
   revision = "2ae454230481a7cb5544325e12ad7658ecccd19b"
   version = "kubernetes-1.8.1"
 
@@ -238,6 +238,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e5310e3d11d44f1836b06e51ee17164788495461a304b771804fa5e9fa3c9c5e"
+  inputs-digest = "10ba5a4188519b992e4b803ae2072e06856b89262f78d46391534a50ba72236a"
   solver-name = "gps-cdcl"
   solver-version = 1

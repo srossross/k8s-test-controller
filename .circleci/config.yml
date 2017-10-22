@@ -11,12 +11,21 @@ jobs:
     steps:
       - checkout
 
-      # specify any bash command here prefixed with `run: `
+      - restore_cache:
+         keys:
+           - Gopkg-{{ checksum "Gopkg.toml" }}
+
       - run:
           name: Dep Ensure
           command: |
             go get -u github.com/golang/dep/cmd/dep
             dep ensure
+
+      - save_cache:
+          key: Gopkg-{{ checksum "Gopkg.toml" }}
+          paths:
+            - vendor
+
       - run:
           name: Go Test
           command: go test -v ./pkg/controller/...
@@ -32,6 +41,7 @@ jobs:
           root: /tmp/commands
           paths:
             - k8s-test-controller-linux-amd64.tgz
+
   deploy:
     docker:
       # specify the version

@@ -2,6 +2,7 @@ package controller
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	typedv1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	listerv1 "k8s.io/client-go/listers/core/v1"
 	cache "k8s.io/client-go/tools/cache"
@@ -19,13 +20,16 @@ type Interface interface {
 	TestRunLister() listerV1alpha1.TestRunLister
 	SrossrossV1alpha1() srossrossv1alpha1.SrossrossV1alpha1Interface
 
-	PodLister() listerv1.PodLister
 	PodInformer() cache.SharedIndexInformer
 	CoreV1() typedv1.CoreV1Interface
 
 	GetTestRunFromKey(key string) (*v1alpha1.TestRun, error)
 	GetPodAndTestRunFromKey(key string) (*v1alpha1.TestRun, *corev1.Pod, error)
 	TestRunnerRemovePodsForDeletedTest(key string) error
+
+	CreatePod(Namespace string, pod *corev1.Pod) (*corev1.Pod, error)
+	ListPods(Namespace string, selector labels.Selector) ([]*corev1.Pod, error)
+	GetPod(Namespace string, Name string) (*corev1.Pod, error)
 }
 
 // TestController creates a single interface to run the reconsile loop
@@ -66,6 +70,18 @@ func (ctrl *TestController) PodInformer() cache.SharedIndexInformer {
 // PodLister gets a corev1 podlister
 func (ctrl *TestController) PodLister() listerv1.PodLister {
 	return listerv1.NewPodLister(ctrl.PodInformer().GetIndexer())
+}
+
+func (ctrl *TestController) CreatePod(Namespace string, pod *corev1.Pod) (*corev1.Pod, error) {
+	return ctrl.CoreV1().Pods(Namespace).Create(pod)
+}
+
+func (ctrl *TestController) ListPods(Namespace string, selector labels.Selector) ([]*corev1.Pod, error) {
+	return ctrl.PodLister().Pods(Namespace).List(selector)
+}
+
+func (ctrl *TestController) GetPod(Namespace string, Name string) (*corev1.Pod, error) {
+	return ctrl.PodLister().Pods(Namespace).Get(Name)
 }
 
 //NewTestController creates a new TestController

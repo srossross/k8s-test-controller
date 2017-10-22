@@ -13,7 +13,7 @@ import (
 )
 
 // PodStateChange records an event for a test state change
-func PodStateChange(ctrl controller.Interface, testRun *v1alpha1.TestRun, pod *corev1.Pod) error {
+func (r *runner) PodStateChange(ctrl controller.Interface, testRun *v1alpha1.TestRun, pod *corev1.Pod) error {
 	testName, ok := pod.Labels["test-name"]
 	if !ok {
 		return fmt.Errorf("Could not get test-name label from pod %s", pod.Name)

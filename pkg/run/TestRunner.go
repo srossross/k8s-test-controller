@@ -82,7 +82,7 @@ func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v
 		Status: v1.PodStatus{},
 	}
 
-	createdPod, err := ctrl.CoreV1().Pods(Namespace).Create(pod)
+	createdPod, err := ctrl.CreatePod(Namespace, pod)
 	if err != nil {
 		CreateTestRunEvent(
 			ctrl, testRun, test.Name, "PodCreationFailure",
@@ -96,7 +96,7 @@ func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v
 
 	return wait.Poll(500*time.Millisecond, 60*time.Second, func() (bool, error) {
 
-		_, err := ctrl.PodLister().Pods(testRun.Namespace).Get(createdPod.Name)
+		_, err := ctrl.GetPod(testRun.Namespace, createdPod.Name)
 
 		if err == nil {
 			return true, nil

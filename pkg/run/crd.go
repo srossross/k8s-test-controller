@@ -57,7 +57,7 @@ var TestTemplateCRD = &apiextensionsv1beta1.CustomResourceDefinition{
 }
 
 // InstallAllCRDs and wait for them to be ready
-func InstallAllCRDs(clientset *apiextensionsclient.Clientset) error {
+func InstallAllCRDs(clientset apiextensionsclient.Interface) error {
 	var err error
 
 	_, err = InstallCRD(clientset, TestRunCRD)
@@ -72,7 +72,7 @@ func InstallAllCRDs(clientset *apiextensionsclient.Clientset) error {
 }
 
 // InstallCRD and wait for it to be ready
-func InstallCRD(clientset *apiextensionsclient.Clientset, crdDef *apiextensionsv1beta1.CustomResourceDefinition) (*apiextensionsv1beta1.CustomResourceDefinition, error) {
+func InstallCRD(clientset apiextensionsclient.Interface, crdDef *apiextensionsv1beta1.CustomResourceDefinition) (*apiextensionsv1beta1.CustomResourceDefinition, error) {
 
 	log.Printf("Ensure CRD '%v'", crdDef.Name)
 	_, err := clientset.ApiextensionsV1beta1().CustomResourceDefinitions().Create(crdDef)

@@ -15,6 +15,7 @@ import (
 	client "github.com/srossross/k8s-test-controller/pkg/client"
 	controller "github.com/srossross/k8s-test-controller/pkg/controller"
 	factory "github.com/srossross/k8s-test-controller/pkg/informers/externalversions"
+	loop "github.com/srossross/k8s-test-controller/pkg/loop"
 	run "github.com/srossross/k8s-test-controller/pkg/run"
 )
 
@@ -135,7 +136,7 @@ func main() {
 	// here we start just one worker reading objects off the queue. If you
 	// wanted to parallelize this, you could start many instances of the worker
 	// function, then ensure your application handles concurrency correctly.
-	run.Work(ctrl, stopCh, queue)
+	loop.Work(ctrl, run.New(), stopCh, queue)
 }
 
 // GetClientConfig gets config from command line kubeconfig param or InClusterConfig

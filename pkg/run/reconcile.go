@@ -7,19 +7,13 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	runtime "k8s.io/apimachinery/pkg/util/runtime"
 
 	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	controller "github.com/srossross/k8s-test-controller/pkg/controller"
 )
 
-// TestRunner will Reconcile a single test run
-func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
-
-	OnExit := func() {
-		fmt.Println("   ----- Exit TestRunner")
-	}
-	defer OnExit()
+// UpdateTestRun will Reconcile a single test run
+func (r *runner) UpdateTestRun(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 
 	if testRun.Status.Status == v1alpha1.TestRunComplete {
 		log.Printf("  | '%v/%v' is already Complete - Skipping", testRun.Namespace, testRun.Name)
@@ -31,7 +25,6 @@ func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 	if selector.String() == "" {
 		selector = labels.Everything()
 	}
-	// log.Printf("!!!! selector is '%v' (everything is '%v')", selector, labels.Everything())
 
 	if err != nil {
 		return fmt.Errorf("error getting test selector: %s", err.Error())
@@ -45,7 +38,7 @@ func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 
 	log.Printf("  | Test Count: %v", len(tests))
 
-	pods, err := ctrl.PodLister().Pods(testRun.Namespace).List(labels.Everything())
+	pods, err := ctrl.ListPods(testRun.Namespace, labels.Everything())
 
 	if err != nil {
 		return fmt.Errorf("Error getting list of pods: %s", err.Error())
@@ -113,9 +106,11 @@ func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 	}
 
 	if completedCount == len(tests) {
-		fmt.Printf(" TEST TEST TEST TEST TEST TEST COMPLETE")
+
 		Message := fmt.Sprintf("Ran %v tests, %v failures", completedCount, failCount)
 		var Reason string
+		testRun = testRun.DeepCopy()
+
 		testRun.Status.Status = v1alpha1.TestRunComplete
 		testRun.Status.Success = failCount == 0
 		testRun.Status.Message = Message
@@ -138,35 +133,4 @@ func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 	log.Printf("Completed %v of %v tests", completedCount, len(tests))
 
 	return nil
-}
-
-// Reconcile all testruns
-func Reconcile(ctrl controller.Interface) {
-
-	lister := ctrl.TestRunLister()
-	runs, err := lister.TestRuns(metav1.NamespaceAll).List(labels.Everything())
-
-	if err != nil {
-		runtime.HandleError(fmt.Errorf("error getting list of testruns: %s", err.Error()))
-		return
-	}
-
-	for _, testRun := range runs {
-
-		err := TestRunner(ctrl, testRun)
-
-		if err != nil {
-			testRun.Status.Status = v1alpha1.TestRunComplete
-			testRun.Status.Success = false
-			testRun.Status.Message = fmt.Sprintf("Critical error during test run (%v)", err.Error())
-
-			log.Printf("Saving Error state for '%v/%v'", testRun.Namespace, testRun.Name)
-			if _, err := ctrl.SrossrossV1alpha1().TestRuns(testRun.Namespace).Update(testRun); err != nil {
-				runtime.HandleError(fmt.Errorf("Error saving update to testrun (This could cause an infinite Reconcile loop): %s", err.Error()))
-
-			}
-
-		}
-	}
-
 }

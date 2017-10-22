@@ -19,8 +19,8 @@ import (
 // TestRunCRDName FIXME: could generate this ?
 var TestRunCRDName = "testruns.srossross.github.io"
 
-// TestCRDName FIXME: could generate this ?
-var TestCRDName = "tests.srossross.github.io"
+// TestTemplateCRDName FIXME: could generate this ?
+var TestTemplateCRDName = "testtemplates.srossross.github.io"
 
 // TestRunCRD exposes the testrun as a crd
 var TestRunCRD = &apiextensionsv1beta1.CustomResourceDefinition{
@@ -39,19 +39,19 @@ var TestRunCRD = &apiextensionsv1beta1.CustomResourceDefinition{
 	},
 }
 
-// TestCRD exposes a test as a crd
-var TestCRD = &apiextensionsv1beta1.CustomResourceDefinition{
+// TestTemplateCRD exposes a test as a crd
+var TestTemplateCRD = &apiextensionsv1beta1.CustomResourceDefinition{
 	ObjectMeta: metav1.ObjectMeta{
-		Name: TestCRDName,
+		Name: TestTemplateCRDName,
 	},
 	Spec: apiextensionsv1beta1.CustomResourceDefinitionSpec{
 		Group:   Srossross.GroupName,
 		Version: "v1alpha1",
 		Scope:   apiextensionsv1beta1.NamespaceScoped,
 		Names: apiextensionsv1beta1.CustomResourceDefinitionNames{
-			Plural:     "tests",
-			Kind:       "Test",
-			ShortNames: []string{"tst"},
+			Plural:     "testtemplates",
+			Kind:       "TestTemplate",
+			ShortNames: []string{"test", "tests"},
 		},
 	},
 }

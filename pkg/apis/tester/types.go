@@ -38,27 +38,22 @@ type TestRunStatus struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type Test struct {
+type TestTemplate struct {
 	metav1.TypeMeta
 	metav1.ObjectMeta
 
-	Spec   TestSpec
-	Status TestStatus
+	Spec TestTemplateSpec
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type TestList struct {
+type TestTemplateList struct {
 	metav1.TypeMeta
 	metav1.ListMeta
 
-	Items []Test
+	Items []TestTemplate
 }
 
-type TestSpec struct {
+type TestTemplateSpec struct {
 	Template corev1.PodTemplateSpec
-}
-
-type TestStatus struct {
-	Sent bool
 }

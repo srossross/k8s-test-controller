@@ -12,14 +12,6 @@ See License in the root of this repo.
 
 package v1alpha1
 
-// TestListerExpansion allows custom methods to be added to
-// TestLister.
-type TestListerExpansion interface{}
-
-// TestNamespaceListerExpansion allows custom methods to be added to
-// TestNamespaceLister.
-type TestNamespaceListerExpansion interface{}
-
 // TestRunListerExpansion allows custom methods to be added to
 // TestRunLister.
 type TestRunListerExpansion interface{}
@@ -27,3 +19,11 @@ type TestRunListerExpansion interface{}
 // TestRunNamespaceListerExpansion allows custom methods to be added to
 // TestRunNamespaceLister.
 type TestRunNamespaceListerExpansion interface{}
+
+// TestTemplateListerExpansion allows custom methods to be added to
+// TestTemplateLister.
+type TestTemplateListerExpansion interface{}
+
+// TestTemplateNamespaceListerExpansion allows custom methods to be added to
+// TestTemplateNamespaceLister.
+type TestTemplateNamespaceListerExpansion interface{}

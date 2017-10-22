@@ -24,28 +24,28 @@ import (
 	time "time"
 )
 
-// TestInformer provides access to a shared informer and lister for
-// Tests.
-type TestInformer interface {
+// TestTemplateInformer provides access to a shared informer and lister for
+// TestTemplates.
+type TestTemplateInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.TestLister
+	Lister() v1alpha1.TestTemplateLister
 }
 
-type testInformer struct {
+type testTemplateInformer struct {
 	factory internalinterfaces.SharedInformerFactory
 }
 
-func newTestInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+func newTestTemplateInformer(client client.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
 	sharedIndexInformer := cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
-				return client.SrossrossV1alpha1().Tests(v1.NamespaceAll).List(options)
+				return client.SrossrossV1alpha1().TestTemplates(v1.NamespaceAll).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
-				return client.SrossrossV1alpha1().Tests(v1.NamespaceAll).Watch(options)
+				return client.SrossrossV1alpha1().TestTemplates(v1.NamespaceAll).Watch(options)
 			},
 		},
-		&tester_v1alpha1.Test{},
+		&tester_v1alpha1.TestTemplate{},
 		resyncPeriod,
 		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 	)
@@ -53,10 +53,10 @@ func newTestInformer(client client.Interface, resyncPeriod time.Duration) cache.
 	return sharedIndexInformer
 }
 
-func (f *testInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&tester_v1alpha1.Test{}, newTestInformer)
+func (f *testTemplateInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&tester_v1alpha1.TestTemplate{}, newTestTemplateInformer)
 }
 
-func (f *testInformer) Lister() v1alpha1.TestLister {
-	return v1alpha1.NewTestLister(f.Informer().GetIndexer())
+func (f *testTemplateInformer) Lister() v1alpha1.TestTemplateLister {
+	return v1alpha1.NewTestTemplateLister(f.Informer().GetIndexer())
 }

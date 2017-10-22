@@ -19,12 +19,12 @@ type FakeSrossrossV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeSrossrossV1alpha1) Tests(namespace string) v1alpha1.TestInterface {
-	return &FakeTests{c, namespace}
-}
-
 func (c *FakeSrossrossV1alpha1) TestRuns(namespace string) v1alpha1.TestRunInterface {
 	return &FakeTestRuns{c, namespace}
+}
+
+func (c *FakeSrossrossV1alpha1) TestTemplates(namespace string) v1alpha1.TestTemplateInterface {
+	return &FakeTestTemplates{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

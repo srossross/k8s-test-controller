@@ -58,33 +58,28 @@ type TestRunStatus struct {
 // +genclient=noStatus
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +resource:path=tests
+// +resource:path=testtemplates
 
-type Test struct {
+type TestTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   TestSpec   `json:"spec,omitempty"`
-	Status TestStatus `json:"status,omitempty"`
+	Spec TestTemplateSpec `json:"spec,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type TestList struct {
+type TestTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 
-	Items []Test `json:"items"`
+	Items []TestTemplate `json:"items"`
 }
 
-type TestSpec struct {
+type TestTemplateSpec struct {
 
 	// Label selector for pods. Existing ReplicaSets whose pods are
 	// selected by this will be the ones affected by this deployment.
 	// +optional
 	Template corev1.PodTemplateSpec `json:"template"`
-}
-
-type TestStatus struct {
-	Sent bool `json:"sent"`
 }

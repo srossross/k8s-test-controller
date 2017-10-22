@@ -6,7 +6,7 @@ import (
 	listerv1 "k8s.io/client-go/listers/core/v1"
 	cache "k8s.io/client-go/tools/cache"
 
-	"github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	"github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	client "github.com/srossross/k8s-test-controller/pkg/client"
 	srossrossv1alpha1 "github.com/srossross/k8s-test-controller/pkg/client/typed/srossross/v1alpha1"
 	factory "github.com/srossross/k8s-test-controller/pkg/informers/externalversions"

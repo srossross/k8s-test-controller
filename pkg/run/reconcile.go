@@ -9,7 +9,7 @@ import (
 	labels "k8s.io/apimachinery/pkg/labels"
 	runtime "k8s.io/apimachinery/pkg/util/runtime"
 
-	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	controller "github.com/srossross/k8s-test-controller/pkg/controller"
 )
 

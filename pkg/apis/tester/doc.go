@@ -14,5 +14,5 @@ limitations under the License.
 // +k8s:deepcopy-gen=package,register
 // +groupName=srossross.github.io
 
-// Package pager is the internal version of the API.
-package pager
+// Package tester is the internal version of the API.
+package tester

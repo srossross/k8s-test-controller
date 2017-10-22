@@ -11,8 +11,8 @@ package fake
 
 import (
 	clientset "github.com/srossross/k8s-test-controller/pkg/client/internalclientset"
-	pagerinternalversion "github.com/srossross/k8s-test-controller/pkg/client/internalclientset/typed/pager/internalversion"
-	fakepagerinternalversion "github.com/srossross/k8s-test-controller/pkg/client/internalclientset/typed/pager/internalversion/fake"
+	testerinternalversion "github.com/srossross/k8s-test-controller/pkg/client/internalclientset/typed/tester/internalversion"
+	faketesterinternalversion "github.com/srossross/k8s-test-controller/pkg/client/internalclientset/typed/tester/internalversion/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -54,6 +54,6 @@ func (c *Clientset) Discovery() discovery.DiscoveryInterface {
 var _ clientset.Interface = &Clientset{}
 
 // Pager retrieves the PagerClient
-func (c *Clientset) Pager() pagerinternalversion.PagerInterface {
-	return &fakepagerinternalversion.FakePager{Fake: &c.Fake}
+func (c *Clientset) Pager() testerinternalversion.PagerInterface {
+	return &faketesterinternalversion.FakePager{Fake: &c.Fake}
 }

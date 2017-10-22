@@ -10,5 +10,5 @@ See License in the root of this repo.
 package fake
 
 import (
-	internalversion "github.com/srossross/k8s-test-controller/pkg/client/internalclientset/typed/pager/internalversion"
+	internalversion "github.com/srossross/k8s-test-controller/pkg/client/internalclientset/typed/tester/internalversion"
 )

@@ -10,7 +10,7 @@ See License in the root of this repo.
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	"github.com/srossross/k8s-test-controller/pkg/client/scheme"
 	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	rest "k8s.io/client-go/rest"

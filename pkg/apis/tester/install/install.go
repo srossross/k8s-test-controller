@@ -30,7 +30,6 @@ func Install(groupFactoryRegistry announced.APIGroupFactoryRegistry, registry *r
 		&announced.GroupMetaFactoryArgs{
 			GroupName:                  tester.GroupName,
 			VersionPreferenceOrder:     []string{v1alpha1.SchemeGroupVersion.Version},
-			ImportPrefix:               "github.com/srossross/k8s-test-controller/pkg/apis/tester",
 			AddInternalObjectsToScheme: tester.AddToScheme,
 		},
 		announced.VersionToSchemeFunc{

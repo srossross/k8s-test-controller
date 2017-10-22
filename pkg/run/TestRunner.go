@@ -47,7 +47,7 @@ func getTestOwnerReference(testRun *v1alpha1.TestRun) metav1.OwnerReference {
 }
 
 // CreateTestPod creates a test pod from a test template
-func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v1alpha1.Test) error {
+func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v1alpha1.TestTemplate) error {
 
 	Namespace := testRun.Namespace
 	if len(Namespace) == 0 {

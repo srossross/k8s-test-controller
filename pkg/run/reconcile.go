@@ -31,7 +31,7 @@ func TestRunner(ctrl controller.Interface, testRun *v1alpha1.TestRun) error {
 		return fmt.Errorf("error getting test selector: %s", err.Error())
 	}
 
-	tests, err := ctrl.TestLister().Tests(testRun.Namespace).List(selector)
+	tests, err := ctrl.TestTemplateLister().TestTemplates(testRun.Namespace).List(selector)
 
 	if err != nil {
 		return fmt.Errorf("error getting list of tests: %s", err.Error())

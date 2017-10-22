@@ -66,7 +66,7 @@ func InstallAllCRDs(clientset *apiextensionsclient.Clientset) error {
 		return err
 	}
 
-	_, err = InstallCRD(clientset, TestCRD)
+	_, err = InstallCRD(clientset, TestTemplateCRD)
 
 	return err
 }

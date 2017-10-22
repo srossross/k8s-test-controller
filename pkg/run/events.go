@@ -79,7 +79,7 @@ func CreateTestRunEvent(
 }
 
 // CreateTestRunEventStart will create a k8s event when a test pod is created
-func CreateTestRunEventStart(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v1alpha1.Test) error {
+func CreateTestRunEventStart(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v1alpha1.TestTemplate) error {
 	return CreateTestRunEvent(
 		ctrl, testRun, test.Name,
 		"TestStart",

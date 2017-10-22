@@ -98,7 +98,7 @@ func NewTestRunInformer(
 
 // NewTestInformer creates a new test Informer that watches and caches tests
 func NewTestInformer(sharedFactory factory.SharedInformerFactory, queue workqueue.RateLimitingInterface) cache.SharedIndexInformer {
-	testInformer := sharedFactory.Srossross().V1alpha1().Tests().Informer()
+	testInformer := sharedFactory.Srossross().V1alpha1().TestTemplates().Informer()
 	// we add a new event handler, watching for changes to API resources.
 	testInformer.AddEventHandler(
 		cache.ResourceEventHandlerFuncs{

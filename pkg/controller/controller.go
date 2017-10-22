@@ -15,7 +15,7 @@ import (
 
 // Interface for a TestController
 type Interface interface {
-	TestLister() listerV1alpha1.TestLister
+	TestTemplateLister() listerV1alpha1.TestTemplateLister
 	TestRunLister() listerV1alpha1.TestRunLister
 	SrossrossV1alpha1() srossrossv1alpha1.SrossrossV1alpha1Interface
 
@@ -48,9 +48,9 @@ func (ctrl *TestController) SrossrossV1alpha1() srossrossv1alpha1.SrossrossV1alp
 	return (*ctrl.testClient).SrossrossV1alpha1()
 }
 
-// TestLister get a testlister
-func (ctrl *TestController) TestLister() listerV1alpha1.TestLister {
-	return (*ctrl.sharedFactory).Srossross().V1alpha1().Tests().Lister()
+// TestTemplateLister get a testlister
+func (ctrl *TestController) TestTemplateLister() listerV1alpha1.TestTemplateLister {
+	return (*ctrl.sharedFactory).Srossross().V1alpha1().TestTemplates().Lister()
 }
 
 // TestRunLister get a testrun lister

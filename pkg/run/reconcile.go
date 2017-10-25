@@ -18,7 +18,16 @@ func (r *runner) UpdateTestRun(ctrl controller.Interface, testRun *v1alpha1.Test
 	if testRun.Status.Status == v1alpha1.TestRunComplete {
 		log.Printf("  | '%v/%v' is already Complete - Skipping", testRun.Namespace, testRun.Name)
 		return nil
+	} else if testRun.Status.Status == "" {
+		testRunCopy := testRun.DeepCopy()
+
+		testRun.Status.Status = v1alpha1.TestRunRunning
+		log.Printf("Running '%v/%v'", testRun.Namespace, testRun.Name)
+		if _, err := ctrl.SrossrossV1alpha1().TestRuns(testRun.Namespace).Update(testRunCopy); err != nil {
+			return err
+		}
 	}
+
 	log.Printf("  | %v/%v", testRun.Namespace, testRun.Name)
 
 	selector, err := metav1.LabelSelectorAsSelector(testRun.Spec.Selector)
@@ -66,7 +75,7 @@ func (r *runner) UpdateTestRun(ctrl controller.Interface, testRun *v1alpha1.Test
 	failCount := 0
 	for _, test := range tests {
 		if JobsSlots <= 0 {
-			log.Printf("  | No more jobs allowed (%v). Will wait for next event", JobsSlots)
+			log.Printf("  | No more jobs allowed (maxjobs: %v). Will wait for next event", testRun.Spec.MaxJobs)
 			return nil
 		}
 

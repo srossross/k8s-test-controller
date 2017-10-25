@@ -16,10 +16,10 @@ func TestTake_BadKey(t *testing.T) {
 	assert.NotNil(err)
 }
 
-func TestTake_ReconsilePodStatus(t *testing.T) {
-	assert := assert.New(t)
-	ctrl := fakecontroller.NewController()
-	runner := fakerun.New()
-	err := take(ctrl, runner, "Pod:namespace/name")
-	assert.Nil(err)
-}
+// func TestTake_ReconsilePodStatus(t *testing.T) {
+// 	assert := assert.New(t)
+// 	ctrl := fakecontroller.NewController()
+// 	runner := fakerun.New()
+// 	err := take(ctrl, runner, "Pod:namespace/name")
+// 	assert.Nil(err)
+// }

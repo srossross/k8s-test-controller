@@ -16,6 +16,7 @@ type Interface interface {
 type runner struct {
 }
 
+// New creates a new runner
 func New() Interface {
 	return &runner{}
 }

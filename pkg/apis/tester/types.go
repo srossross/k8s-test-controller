@@ -30,10 +30,19 @@ type TestRunSpec struct {
 	MaxFail  int
 }
 
+type TestRunRecord struct {
+	TestName  string
+	PodRef    *corev1.ObjectReference
+	StartTime *metav1.Time
+	EndTime   *metav1.Time
+	Result    string
+}
+
 type TestRunStatus struct {
 	Status  string
 	Message string
 	Success bool
+	Records []TestRunRecord
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -55,5 +64,7 @@ type TestTemplateList struct {
 }
 
 type TestTemplateSpec struct {
-	Template corev1.PodTemplateSpec
+	Description string
+	Weight      int
+	Template    corev1.PodTemplateSpec
 }

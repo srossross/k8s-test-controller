@@ -8,6 +8,7 @@ import (
 var (
 	// TestRunComplete will set the status to complete
 	TestRunComplete = "Complete"
+	TestRunRunning  = "Running"
 )
 
 // +genclient=true
@@ -47,10 +48,28 @@ type TestRunSpec struct {
 	MaxFail int `json:"maxfail"`
 }
 
+// TestRunRecord is a refrence to a pod run
+type TestRunRecord struct {
+
+	// the name of the test to run
+	TestName string `json:"testname"`
+	// The pod that this run
+	PodRef *corev1.ObjectReference `json:"podref"`
+	// When the pod was started
+	StartTime *metav1.Time `json:"starttime"`
+	// When the pod was started
+	EndTime *metav1.Time `json:"endtime"`
+
+	// When the pod was started
+	Result string `json:"result"`
+}
+
 type TestRunStatus struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 	Success bool   `json:"success"`
+
+	Records []TestRunRecord `json:"records"`
 }
 
 // +genclient=true
@@ -78,8 +97,9 @@ type TestTemplateList struct {
 
 type TestTemplateSpec struct {
 
-	// Label selector for pods. Existing ReplicaSets whose pods are
-	// selected by this will be the ones affected by this deployment.
-	// +optional
+	// Description of what the test is about
+	Description string `json:"description"`
+	// Test run weight. the pods will be run in sorted order of (Weight, Name)
+	Weight   int                    `json:"weight"`
 	Template corev1.PodTemplateSpec `json:"template"`
 }

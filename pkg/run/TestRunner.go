@@ -47,7 +47,7 @@ func getTestOwnerReference(testRun *v1alpha1.TestRun) metav1.OwnerReference {
 }
 
 // CreateTestPod creates a test pod from a test template
-func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v1alpha1.TestTemplate) error {
+func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v1alpha1.TestTemplate) (*v1.Pod, error) {
 
 	Namespace := testRun.Namespace
 	if len(Namespace) == 0 {
@@ -56,7 +56,7 @@ func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v
 
 	err := CreateTestRunEventStart(ctrl, testRun, test)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	Annotations := mergeMaps(test.Spec.Template.Annotations, map[string]string{
@@ -90,11 +90,11 @@ func CreateTestPod(ctrl controller.Interface, testRun *v1alpha1.TestRun, test *v
 		)
 		log.Printf("Error Creating pod while starting test %v", err)
 
-		return err
+		return nil, err
 	}
 	log.Printf("  |  Test created pod '%s/%s'", Namespace, createdPod.Name)
 
-	return wait.Poll(500*time.Millisecond, 60*time.Second, func() (bool, error) {
+	return createdPod, wait.Poll(500*time.Millisecond, 60*time.Second, func() (bool, error) {
 
 		_, err := ctrl.GetPod(testRun.Namespace, createdPod.Name)
 

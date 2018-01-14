@@ -10,7 +10,7 @@ See License in the root of this repo.
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	scheme "github.com/srossross/k8s-test-controller/pkg/client/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"

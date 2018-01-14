@@ -10,7 +10,7 @@ See License in the root of this repo.
 package scheme
 
 import (
-	pager "github.com/srossross/k8s-test-controller/pkg/apis/pager/install"
+	tester "github.com/srossross/k8s-test-controller/pkg/apis/tester/install"
 	announced "k8s.io/apimachinery/pkg/apimachinery/announced"
 	registered "k8s.io/apimachinery/pkg/apimachinery/registered"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -34,6 +34,6 @@ func init() {
 
 // Install registers the API group and adds types to a scheme
 func Install(groupFactoryRegistry announced.APIGroupFactoryRegistry, registry *registered.APIRegistrationManager, scheme *runtime.Scheme) {
-	pager.Install(groupFactoryRegistry, registry, scheme)
+	tester.Install(groupFactoryRegistry, registry, scheme)
 
 }

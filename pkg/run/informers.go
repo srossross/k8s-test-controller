@@ -6,18 +6,21 @@ import (
 
 	log "github.com/golang/glog"
 
-	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	factory "github.com/srossross/k8s-test-controller/pkg/informers/externalversions"
 	"k8s.io/api/core/v1"
 	cache "k8s.io/client-go/tools/cache"
 	workqueue "k8s.io/client-go/util/workqueue"
 )
 
+// ReconsileType is a string
 type ReconsileType string
 
 var (
+	// ReconsilePodStatus tells the Reconcile loop that a pod status has changed
 	ReconsilePodStatus = "Pod"
-	ReconsileTestRun   = "TestRun"
+	// ReconsileTestRun tells the Reconcile loop that a test run has changed
+	ReconsileTestRun = "TestRun"
 )
 
 func isStatusChange(old, cur interface{}) bool {
@@ -98,7 +101,7 @@ func NewTestRunInformer(
 
 // NewTestInformer creates a new test Informer that watches and caches tests
 func NewTestInformer(sharedFactory factory.SharedInformerFactory, queue workqueue.RateLimitingInterface) cache.SharedIndexInformer {
-	testInformer := sharedFactory.Srossross().V1alpha1().Tests().Informer()
+	testInformer := sharedFactory.Srossross().V1alpha1().TestTemplates().Informer()
 	// we add a new event handler, watching for changes to API resources.
 	testInformer.AddEventHandler(
 		cache.ResourceEventHandlerFuncs{
@@ -128,10 +131,8 @@ func NewTestInformer(sharedFactory factory.SharedInformerFactory, queue workqueu
 	return testInformer
 }
 
-// NewPodInformer  creates a new test Informer that watches and caches pods
-func NewPodInformer(sharedFactory factory.SharedInformerFactory, queue workqueue.RateLimitingInterface) cache.SharedIndexInformer {
-
-	podInformer := GetPodInformer(sharedFactory)
+// SetupPodInformer  creates a new test Informer that watches and caches pods
+func SetupPodInformer(podInformer cache.SharedIndexInformer, queue workqueue.RateLimitingInterface) cache.SharedIndexInformer {
 
 	enqueue := func(cur interface{}) {
 		key, ok := podTestRunKey(cur)

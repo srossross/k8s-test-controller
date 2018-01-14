@@ -10,7 +10,7 @@ See License in the root of this repo.
 package scheme
 
 import (
-	srossrossv1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	srossrossv1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

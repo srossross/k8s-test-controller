@@ -13,7 +13,7 @@ See License in the root of this repo.
 package v1alpha1
 
 import (
-	pager_v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	tester_v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	client "github.com/srossross/k8s-test-controller/pkg/client"
 	internalinterfaces "github.com/srossross/k8s-test-controller/pkg/informers/externalversions/internalinterfaces"
 	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/listers/srossross/v1alpha1"
@@ -45,7 +45,7 @@ func newTestRunInformer(client client.Interface, resyncPeriod time.Duration) cac
 				return client.SrossrossV1alpha1().TestRuns(v1.NamespaceAll).Watch(options)
 			},
 		},
-		&pager_v1alpha1.TestRun{},
+		&tester_v1alpha1.TestRun{},
 		resyncPeriod,
 		cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
 	)
@@ -54,7 +54,7 @@ func newTestRunInformer(client client.Interface, resyncPeriod time.Duration) cac
 }
 
 func (f *testRunInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&pager_v1alpha1.TestRun{}, newTestRunInformer)
+	return f.factory.InformerFor(&tester_v1alpha1.TestRun{}, newTestRunInformer)
 }
 
 func (f *testRunInformer) Lister() v1alpha1.TestRunLister {

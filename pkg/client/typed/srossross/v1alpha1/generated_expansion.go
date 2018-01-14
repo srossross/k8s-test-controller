@@ -9,6 +9,6 @@ See License in the root of this repo.
 */
 package v1alpha1
 
-type TestExpansion interface{}
-
 type TestRunExpansion interface{}
+
+type TestTemplateExpansion interface{}

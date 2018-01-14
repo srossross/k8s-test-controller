@@ -3,3 +3,4 @@ bin/
 .generate_exes
 k8s-test-controller
 k8s-test-controller-*
+vendor/

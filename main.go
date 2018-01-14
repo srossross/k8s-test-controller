@@ -2,24 +2,21 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
-	errors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/util/runtime"
-	"k8s.io/client-go/rest"
-	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/workqueue"
+	typedv1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	rest "k8s.io/client-go/rest"
+	cache "k8s.io/client-go/tools/cache"
+	clientcmd "k8s.io/client-go/tools/clientcmd"
+	workqueue "k8s.io/client-go/util/workqueue"
 
-	"github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
-	"github.com/srossross/k8s-test-controller/pkg/client"
+	client "github.com/srossross/k8s-test-controller/pkg/client"
+	controller "github.com/srossross/k8s-test-controller/pkg/controller"
 	factory "github.com/srossross/k8s-test-controller/pkg/informers/externalversions"
-	"github.com/srossross/k8s-test-controller/pkg/run"
-	corev1 "k8s.io/api/core/v1"
+	loop "github.com/srossross/k8s-test-controller/pkg/loop"
+	run "github.com/srossross/k8s-test-controller/pkg/run"
 )
 
 var (
@@ -52,8 +49,11 @@ var (
 	// date results with less 'effort'
 	sharedFactory factory.SharedInformerFactory
 
+	ctrl controller.Interface
+
 	// cl is a Kubernetes API client for our custom resource definition type
-	cl client.Interface
+	cl           *client.Clientset
+	coreV1Client *typedv1.CoreV1Client
 
 	// pb is the pushbullet client to use to send alerts
 	// pb *pushbullet.Pushbullet
@@ -92,6 +92,12 @@ func main() {
 		log.Fatalf("error creating api client: %s", err.Error())
 	}
 
+	coreV1Client, err = typedv1.NewForConfig(config)
+
+	if err != nil {
+		log.Fatalf("error creating api client: %s", err.Error())
+	}
+
 	log.Printf("Created Kubernetes client.")
 
 	// we use a shared informer from the informer factory, to save calls to the
@@ -99,12 +105,13 @@ func main() {
 	// control loops. We set a resync period of 30 seconds, in case any
 	// create/replace/update/delete operations are missed when watching
 	sharedFactory = factory.NewSharedInformerFactory(cl, time.Second*30)
+	ctrl = controller.NewTestController(&sharedFactory, cl, coreV1Client)
 
 	testRunInformer := run.NewTestRunInformer(sharedFactory, queue)
 
 	testInformer := run.NewTestInformer(sharedFactory, queue)
 
-	podInformer := run.NewPodInformer(sharedFactory, queue)
+	podInformer := run.SetupPodInformer(ctrl.PodInformer(), queue)
 
 	// start the informer. This will cause it to begin receiving updates from
 	// the configured API server and firing event handlers in response.
@@ -129,77 +136,7 @@ func main() {
 	// here we start just one worker reading objects off the queue. If you
 	// wanted to parallelize this, you could start many instances of the worker
 	// function, then ensure your application handles concurrency correctly.
-	work()
-}
-
-func splitOnce(key, sep string) (string, string) {
-	tmp := strings.SplitN(key, sep, 2)
-	if len(tmp) == 1 {
-		return tmp[0], ""
-	}
-	return tmp[0], tmp[1]
-}
-
-func work() {
-	for {
-		// we read a message off the queue
-		key, shutdown := queue.Get()
-
-		// if the queue has been shut down, we should exit the work queue here
-		if shutdown {
-			stopCh <- struct{}{}
-			return
-		}
-
-		// convert the queue item into a string. If it's not a string, we'll
-		// simply discard it as invalid data and log a message.
-		var strKey string
-		var ok bool
-		if strKey, ok = key.(string); !ok {
-			runtime.HandleError(fmt.Errorf("key in queue should be of type string but got %T. discarding", key))
-			return
-		}
-
-		log.Printf("Popped '%s' off the queue", key)
-		// we define a function here to process a queue item, so that we can
-		// use 'defer' to make sure the message is marked as Done on the queue
-		func(key string) {
-			defer queue.Done(key)
-			runType, key := splitOnce(key, ":")
-
-			var err error
-			var testRun *v1alpha1.TestRun
-			var pod *corev1.Pod
-
-			switch runType {
-			case run.ReconsilePodStatus:
-				{
-					testRun, pod, err = run.GetPodAndTestRunFromKey(sharedFactory, key)
-					if err == nil {
-						err = run.PodStateChange(sharedFactory, cl, testRun, pod)
-					}
-				}
-			case run.ReconsileTestRun:
-				{
-					testRun, err = run.GetTestRunFromKey(sharedFactory, key)
-					if err == nil {
-						err = run.TestRunner(sharedFactory, cl, testRun)
-					} else if errors.IsNotFound(err) {
-						// FIXME: should this be handled by k8s garbage collection?
-						err = run.TestRunnerRemovePodsForDeletedTest(sharedFactory, cl, key)
-					}
-				}
-			default:
-				err = fmt.Errorf("key in queue should be of type string but got %T. discarding", key)
-			}
-
-			if err != nil {
-				runtime.HandleError(err)
-				return
-			}
-			queue.Forget(key)
-		}(strKey)
-	}
+	loop.Work(ctrl, run.New(), stopCh, queue)
 }
 
 // GetClientConfig gets config from command line kubeconfig param or InClusterConfig

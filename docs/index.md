@@ -24,19 +24,19 @@ kubectl --namespace kube-system rollout status deploy test-controller-deployment
 ```
 
 That's it! Now you can get started running tests. This controller adds two
-custom resources to the Kubernetes cluster - A `Test` and a `TestRun`.
+custom resources to the Kubernetes cluster - A `TestTemplate` and a `TestRun`.
 
 
 ## Resources
 
-### Kind: Test
+### Kind: TestTemplate
 
-A `Test` resource will look something like this:
+A `TestTemplate` resource will look something like this:
 
 ```yaml
 # File test-success.yaml
 apiVersion: srossross.github.io/v1alpha1
-kind: Test
+kind: TestTemplate
 metadata:
   name: test-success
   labels:   #  This can be used to filter tests in a testrun
@@ -51,7 +51,7 @@ spec:
       restartPolicy: Never
 ```
 
-It will contain a `Pod` definition in the  `spec.template` field. The `Test` will
+It will contain a `Pod` definition in the  `spec.template` field. The `TestTemplate` will
 will instantiate this pod when a new  `TestRun` is created.
 
 To add this test to your cluster, first create the file `./test-success.yaml` then run:
@@ -60,8 +60,8 @@ To add this test to your cluster, first create the file `./test-success.yaml` th
 kubectl create -f ./test-success.yaml
 ```
 
-A `Test` is comparable to a Kubernetes `[Job](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/)`.
-Unlike a `Job`, a `Test` will not run by itself. For that you will need to create
+A `TestTemplate` is comparable to a Kubernetes `[Job](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/)`.
+Unlike a `Job`, a `TestTemplate` will not run by itself. For that you will need to create
 a `TestRun`.
 
 ### Kind: TestRun
@@ -131,7 +131,7 @@ kubectl rollout status testrun test-run-1 --watch
 ### Comparison with helm tests
 
 This test controller works great with helm.
-You can create **Test** and **TestRun** resources from your charts, the only
+You can create **TestTemplate** and **TestRun** resources from your charts, the only
 difference is how a test is launched. you can now use `kubectl create -f testrun.yaml`
 instead  of `helm test`.
 
@@ -182,13 +182,13 @@ spec:
 ---
 
 
-## Example Test
+## Example TestTemplate
 
 In `wordpress/tests/test-mariadb-connection.yaml`:
 
 ```
 apiVersion: srossross.github.io/v1alpha1
-kind: Test
+kind: TestTemplate
 metadata:
   name: "credentials-test"
   labels:

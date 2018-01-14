@@ -13,14 +13,14 @@ import (
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	Srossross "github.com/srossross/k8s-test-controller/pkg/apis/pager"
+	Srossross "github.com/srossross/k8s-test-controller/pkg/apis/tester"
 )
 
 // TestRunCRDName FIXME: could generate this ?
 var TestRunCRDName = "testruns.srossross.github.io"
 
-// TestCRDName FIXME: could generate this ?
-var TestCRDName = "tests.srossross.github.io"
+// TestTemplateCRDName FIXME: could generate this ?
+var TestTemplateCRDName = "testtemplates.srossross.github.io"
 
 // TestRunCRD exposes the testrun as a crd
 var TestRunCRD = &apiextensionsv1beta1.CustomResourceDefinition{
@@ -39,25 +39,25 @@ var TestRunCRD = &apiextensionsv1beta1.CustomResourceDefinition{
 	},
 }
 
-// TestCRD exposes a test as a crd
-var TestCRD = &apiextensionsv1beta1.CustomResourceDefinition{
+// TestTemplateCRD exposes a test as a crd
+var TestTemplateCRD = &apiextensionsv1beta1.CustomResourceDefinition{
 	ObjectMeta: metav1.ObjectMeta{
-		Name: TestCRDName,
+		Name: TestTemplateCRDName,
 	},
 	Spec: apiextensionsv1beta1.CustomResourceDefinitionSpec{
 		Group:   Srossross.GroupName,
 		Version: "v1alpha1",
 		Scope:   apiextensionsv1beta1.NamespaceScoped,
 		Names: apiextensionsv1beta1.CustomResourceDefinitionNames{
-			Plural:     "tests",
-			Kind:       "Test",
-			ShortNames: []string{"tst"},
+			Plural:     "testtemplates",
+			Kind:       "TestTemplate",
+			ShortNames: []string{"test", "tests"},
 		},
 	},
 }
 
 // InstallAllCRDs and wait for them to be ready
-func InstallAllCRDs(clientset *apiextensionsclient.Clientset) error {
+func InstallAllCRDs(clientset apiextensionsclient.Interface) error {
 	var err error
 
 	_, err = InstallCRD(clientset, TestRunCRD)
@@ -66,13 +66,13 @@ func InstallAllCRDs(clientset *apiextensionsclient.Clientset) error {
 		return err
 	}
 
-	_, err = InstallCRD(clientset, TestCRD)
+	_, err = InstallCRD(clientset, TestTemplateCRD)
 
 	return err
 }
 
 // InstallCRD and wait for it to be ready
-func InstallCRD(clientset *apiextensionsclient.Clientset, crdDef *apiextensionsv1beta1.CustomResourceDefinition) (*apiextensionsv1beta1.CustomResourceDefinition, error) {
+func InstallCRD(clientset apiextensionsclient.Interface, crdDef *apiextensionsv1beta1.CustomResourceDefinition) (*apiextensionsv1beta1.CustomResourceDefinition, error) {
 
 	log.Printf("Ensure CRD '%v'", crdDef.Name)
 	_, err := clientset.ApiextensionsV1beta1().CustomResourceDefinitions().Create(crdDef)

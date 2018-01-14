@@ -10,7 +10,7 @@ See License in the root of this repo.
 package v1alpha1
 
 import (
-	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/pager/v1alpha1"
+	v1alpha1 "github.com/srossross/k8s-test-controller/pkg/apis/tester/v1alpha1"
 	"github.com/srossross/k8s-test-controller/pkg/client/scheme"
 	serializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	rest "k8s.io/client-go/rest"
@@ -18,8 +18,8 @@ import (
 
 type SrossrossV1alpha1Interface interface {
 	RESTClient() rest.Interface
-	TestsGetter
 	TestRunsGetter
+	TestTemplatesGetter
 }
 
 // SrossrossV1alpha1Client is used to interact with features provided by the srossross.github.io group.
@@ -27,12 +27,12 @@ type SrossrossV1alpha1Client struct {
 	restClient rest.Interface
 }
 
-func (c *SrossrossV1alpha1Client) Tests(namespace string) TestInterface {
-	return newTests(c, namespace)
-}
-
 func (c *SrossrossV1alpha1Client) TestRuns(namespace string) TestRunInterface {
 	return newTestRuns(c, namespace)
+}
+
+func (c *SrossrossV1alpha1Client) TestTemplates(namespace string) TestTemplateInterface {
+	return newTestTemplates(c, namespace)
 }
 
 // NewForConfig creates a new SrossrossV1alpha1Client for the given config.
